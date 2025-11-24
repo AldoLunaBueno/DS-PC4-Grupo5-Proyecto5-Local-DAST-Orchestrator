@@ -48,7 +48,7 @@ jobs:
         if: steps.set-status.outputs.target_status != ''
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          PROJECT_NUMBER: ${{ variables.PROJECT_NUMBER }} # número de proyecto que vamos a automatizar
+          PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }} # número de proyecto que vamos a automatizar
           ORG: "@me" # propietario del proyecto
           # Inyectamos el estado de destino determinado en el paso anterior
           STATUS_NAME: ${{ steps.set-status.outputs.target_status }} 
