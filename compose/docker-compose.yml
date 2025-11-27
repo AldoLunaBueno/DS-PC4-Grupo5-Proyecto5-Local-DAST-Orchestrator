@@ -1,5 +1,8 @@
 services:
   web:
+    build:
+      context: ../app
+      dockerfile: Dockerfile
     image: dast_web_app
     container_name: dast_web
     ports:
