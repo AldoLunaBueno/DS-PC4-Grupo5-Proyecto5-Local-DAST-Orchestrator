@@ -1,5 +1,8 @@
 services:
   web:
+    build:
+      context: ../app
+      dockerfile: Dockerfile
     image: dast_web_app
     container_name: dast_web
     ports:
@@ -33,6 +36,18 @@ services:
       - backend-net
     mem_limit: 256m
     cpus: 0.25
+    restart: unless-stopped
+
+  zap:
+    image: zaproxy/zap-stable
+    container_name: dast_zap
+    volumes:
+      - ../reports:/zap/wrk/
+    networks:
+      - frontend-net
+    depends_on:
+      - web
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
     restart: unless-stopped
 
 networks:
