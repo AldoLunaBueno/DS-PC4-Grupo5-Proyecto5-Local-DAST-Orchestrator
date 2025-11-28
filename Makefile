@@ -30,9 +30,10 @@ compose-down:
 # Target de limpieza, alias para 'compose-down'.
 clean: compose-down ## Borrar stack
 
-# Ejecutar el escaneo DAST (a implementar en SPRINT 2).
+# Ejecutar escaneo DAST completo.
 scan: ## Escaneo DAST
-	@echo "Target 'scan' no implementado aún."
+	@echo "Ejecutando flujo completo de escaneo DAST..."
+	@./scripts/run-dast.sh
 
 # Muestra una lista de los targets disponibles con su descripción.
 # Utiliza autodescripción basada en comentarios.
