@@ -1,0 +1,60 @@
+services:
+  web:
+    build:
+      context: ../app
+      dockerfile: Dockerfile
+    image: dast_web_app
+    container_name: dast_web
+    ports:
+      - "${WEB_PORT:-5000}:5000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    networks:
+      - frontend-net
+      - backend-net
+    depends_on:
+      - db
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+
+  db:
+    image: postgres:alpine
+    container_name: dast_db
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - backend-net
+    mem_limit: 256m
+    cpus: 0.25
+    restart: unless-stopped
+
+  zap:
+    image: zaproxy/zap-stable
+    container_name: dast_zap
+    volumes:
+      - ../reports:/zap/wrk/
+    networks:
+      - frontend-net
+    depends_on:
+      - web
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
+    restart: unless-stopped
+
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
+
+volumes:
+  db_data:

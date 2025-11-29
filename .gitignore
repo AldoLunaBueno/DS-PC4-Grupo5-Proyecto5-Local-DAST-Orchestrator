@@ -1,0 +1,6 @@
+/tmp
+.env
+compose/.env
+reports/*.html
+reports/*.json
+reports/*.xml
